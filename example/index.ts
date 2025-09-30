@@ -38,9 +38,7 @@ loader.load(
   "./scene.glb",
   (gltf) => {
     scene.add(gltf.scene);
-    setTimeout(() => {
-      vertexBake(scene);
-    }, 1000);
+    vertexBake(scene, { resolution: 1024, bakeTexture: true });
     scene.traverse((obj) => {
       if ((obj as THREE.Mesh).isMesh) {
         const material = (obj as THREE.Mesh).material;

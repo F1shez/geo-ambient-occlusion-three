@@ -1,0 +1,32 @@
+{
+  "name": "geo-ambient-occlusion-three",
+  "version": "0.1.0",
+  "description": "Geometry-based ambient occlusion utilities for three.js",
+  "author": "notahero",
+  "license": "MIT",
+  "main": "dist/geo-ambient-occlusion-three.cjs.js",
+  "module": "dist/geo-ambient-occlusion-three.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/geo-ambient-occlusion-three.es.js",
+      "require": "./dist/geo-ambient-occlusion-three.cjs.js"
+    }
+  },
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "peerDependencies": {
+    "three": "^0.166.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.180.0",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.20",
+    "vite-plugin-dts": "^4.2.1"
+  },
+  "dependencies": {
+    "geo-ambient-occlusion": "^3.0.4"
+  }
+}

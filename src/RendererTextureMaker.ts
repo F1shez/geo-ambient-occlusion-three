@@ -7,7 +7,6 @@ import {
   OrthographicCamera,
   WebGLRenderer,
   Vector2,
-  Mesh,
 } from "three";
 import { DilateShader } from "./DilateShader";
 

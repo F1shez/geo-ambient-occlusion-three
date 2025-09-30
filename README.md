@@ -3,7 +3,7 @@
 A Three.js wrapper for [geo-ambient-occlusion](https://github.com/wwwtyro/geo-ambient-occlusion) that allows you to bake ambient occlusion into **vertex colors** or **textures** for arbitrary meshes.
 
 <p align="center">
-  <img src="./public/example.jpg">
+  <img src="https://raw.githubusercontent.com/F1shez/geo-ambient-occlusion-three/refs/heads/main/public/example.jpg">
 </p>
 
 ---
@@ -14,7 +14,7 @@ A Three.js wrapper for [geo-ambient-occlusion](https://github.com/wwwtyro/geo-am
 - Optionally bake AO into a **texture**.
 - Baked texture have Dilation
 <p align="center">
-  <img src="./public/exampleAoMap.png">
+  <img src="https://raw.githubusercontent.com/F1shez/geo-ambient-occlusion-three/refs/heads/main/public/exampleAoMap.png">
 </p>
 
 ---
@@ -40,7 +40,12 @@ loader.load(
   "./scene.glb",
   (gltf) => {
     scene.add(gltf.scene);
+    //with bake texture aoMap
     vertexBake(scene, { resolution: 1024, bakeTexture: true });
+
+    //bake in vertex colors
+    vertexBake(scene);
+    //need turn on show vertex colors
     scene.traverse((obj) => {
       if ((obj as THREE.Mesh).isMesh) {
         const material = (obj as THREE.Mesh).material;
@@ -54,6 +59,8 @@ loader.load(
   }
 );
 ```
+
+also look in "/example/index.ts"
 
 ---
 

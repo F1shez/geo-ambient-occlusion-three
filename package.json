@@ -1,8 +1,19 @@
 {
   "name": "geo-ambient-occlusion-three",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "Geometry-based ambient occlusion utilities for three.js",
   "author": "notahero",
+  "keywords": [
+    "three",
+    "three.js",
+    "ao",
+    "ambient occlusion",
+    "3d",
+    "graphics",
+    "GPU",
+    "render",
+    "webgl"
+  ],
   "license": "MIT",
   "main": "dist/geo-ambient-occlusion-three.cjs.js",
   "module": "dist/geo-ambient-occlusion-three.es.js",
@@ -10,7 +21,8 @@
   "exports": {
     ".": {
       "import": "./dist/geo-ambient-occlusion-three.es.js",
-      "require": "./dist/geo-ambient-occlusion-three.cjs.js"
+      "require": "./dist/geo-ambient-occlusion-three.cjs.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
@@ -18,7 +30,12 @@
     "dev": "vite"
   },
   "peerDependencies": {
-    "three": "^0.166.0"
+    "three": ">=0.150.0 <1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "three": {
+      "optional": false
+    }
   },
   "devDependencies": {
     "@types/three": "^0.180.0",

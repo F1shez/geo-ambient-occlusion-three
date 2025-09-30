@@ -12,6 +12,7 @@ function vertexShader() {
         fNormal = normal;
         vec3 newPosition = vec3(uv.xy*2.0-1.0, 0.0);
         newPosition.y *= -1.0;
+        newPosition.y += 2.0;
         gl_Position = projectionMatrix * modelViewMatrix * vec4( newPosition, 1.0 );
     }
   `;
@@ -24,8 +25,6 @@ function fragmentShader() {
 
         void main() {
             gl_FragColor = vec4(vColor, 1.0);
-            // vec3 test = vColor;
-            // gl_FragColor = vec4(0.5, 0.5, 0.0, 1.0);
         }
   `;
 }

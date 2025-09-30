@@ -37,13 +37,13 @@ export class RendererTextureMaker {
 
     this.camera.position.z = 1;
     this.renderer.autoClear = false;
+    // document.body.appendChild(this.renderer.domElement); //for debug unwrap texture
   }
 
-  createMap(object: Object3D, height = 1024, width = 1024) {
-    const mesh = object.clone() as Mesh;
+  createMap(mesh: Object3D, height = 1024, width = 1024) {
+    mesh.position.set(0, 0, 0);
     this.effect1.uniforms["u_textureSize"].value = new Vector2(height, width);
 
-    //applyMatrix not working, idk why
     mesh.matrixAutoUpdate = false;
     mesh.matrix.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     mesh.matrixWorld.set(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -59,7 +59,6 @@ export class RendererTextureMaker {
     this.scene.add(mesh);
 
     this.composer.render();
-    // debugger;
     const src = this.renderer.domElement.toDataURL();
 
     mesh.remove();

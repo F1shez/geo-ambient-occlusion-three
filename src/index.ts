@@ -9,11 +9,18 @@ import {
   TextureLoader,
   type Scene,
 } from "three";
-import { mergeObject, copyUV1toUV2, changeVertexColor } from "./utils";
-import { setUnwrapMap } from "./setUnwrapMapVertexColor";
-import { RendererTextureMaker } from "./RendererTextureMaker";
+import {
+  mergeObject,
+  copyUV1toUV2,
+  changeVertexColor,
+  exportGltf,
+  bakeTextureFromMesh,
+} from "./utils";
 
-export async function vertexBake(scene: Scene | Object3D) {
+export async function vertexBake(
+  scene: Scene | Object3D,
+  bakeTexture: boolean = false
+) {
   const textureLoader = new TextureLoader();
   const geometries: any[] = [];
   const promises: Promise<Texture | void>[] = [];
@@ -37,29 +44,32 @@ export async function vertexBake(scene: Scene | Object3D) {
     const ao = computeAmbientOcclusion(mergedGeometry);
     setVertexAO(geometries, ao);
 
-    scene.traverse(function (child: any) {
-      if (child.isMesh) {
-        geometries.forEach(async (geometry) => {
-          if (child.geometry === geometry) {
-            console.log("find");
-            const image = createTextureAO(child);
-            const promise = textureLoader.loadAsync(image);
-            promises.push(promise);
-            const newAoMap = (await promise) as Texture;
-            newAoMap.flipY = false;
-            newAoMap.wrapS = RepeatWrapping;
-            newAoMap.wrapT = RepeatWrapping;
-            child.material.aoMap = newAoMap;
-            child.material.aoMapIntensity = 0.8;
-            changeVertexColor(child, new Color(1, 1, 1));
-            child.material.vertexColors = false;
-            child.material.needsUpdate = true;
-          }
-        });
-      }
-    });
+    if (bakeTexture) {
+      scene.traverse(function (child: any) {
+        if (child.isMesh) {
+          geometries.forEach(async (geometry) => {
+            if (child.geometry === geometry) {
+              console.log("find");
+              const image = bakeTextureFromMesh(child);
+              const promise = textureLoader.loadAsync(image);
+              promises.push(promise);
+              const newAoMap = (await promise) as Texture;
+              newAoMap.flipY = false;
+              newAoMap.wrapS = RepeatWrapping;
+              newAoMap.wrapT = RepeatWrapping;
+              child.material.aoMap = newAoMap;
+              child.material.aoMapIntensity = 0.8;
+              changeVertexColor(child, new Color(1, 1, 1));
+              child.material.vertexColors = false;
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+      });
+      await Promise.all(promises);
+    }
 
-    await Promise.all(promises);
+    await exportGltf(scene); //for debug gltf
     console.log("finish bake vertex AO");
   } else {
     console.log("nothing to bake");
@@ -67,7 +77,7 @@ export async function vertexBake(scene: Scene | Object3D) {
 }
 
 export function computeAmbientOcclusion(
-  geometry: BufferGeometry,
+  geometry: BufferGeometry
 ): Float32Array {
   const index = geometry.getIndex();
 
@@ -122,18 +132,7 @@ function setVertexAO(geometries: any, ao: any) {
 
     geometry.setAttribute("color", new BufferAttribute(colors, 3));
 
-    // geometry.computeVertexNormals();
-    // geometry.computeTangents();
-    // geometry.normalizeNormals();
     geometry.attributes.color.needsUpdate = true;
     indent += geometry.attributes.color.count;
   });
-}
-
-function createTextureAO(mesh: any) {
-  const textureMaker = new RendererTextureMaker();
-  var meshTemp = mesh.clone();
-  meshTemp.frustumCulled = false;
-  setUnwrapMap(meshTemp);
-  return textureMaker.createMap(meshTemp, 2048, 2048);
 }
